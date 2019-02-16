@@ -36,9 +36,12 @@ func (r *oauthProxy) dropCookie(w http.ResponseWriter, host, name, value string,
 		Domain:   domain,
 		HttpOnly: r.config.HTTPOnlyCookie,
 		Name:     name,
-		Path:     r.config.BaseURI + "/",
+		Path:     "/",
 		Secure:   r.config.SecureCookie,
 		Value:    value,
+	}
+	if r.config.BaseURI != "" {
+		cookie.Path = r.config.BaseURI //Trailing slash is an evil thing
 	}
 	if !r.config.EnableSessionCookies && duration != 0 {
 		cookie.Expires = time.Now().Add(duration)
